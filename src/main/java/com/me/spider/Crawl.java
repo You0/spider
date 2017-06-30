@@ -14,6 +14,7 @@ import com.me.http.HttpTask;
 import com.me.http.MapperCallBack;
 import com.me.task.AnsyTask;
 import com.me.utils.BaseUtil;
+import com.me.utils.Log;
 
 @Controller("crawl")
 public class Crawl {
@@ -78,7 +79,9 @@ public class Crawl {
 					while(true){
 						//多线程并发管理交给okhttp去处理
 						String url = blockingQueue.take();
-						httpTask.submit(url);
+						
+						httpTask.submit(url).enqueue(listener);
+						
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();

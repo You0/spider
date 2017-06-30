@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.me.utils.Log;
+
 import redis.clients.jedis.Jedis;
 
 @Service
@@ -92,6 +94,9 @@ public class RedisService {
                 jedis.close();
             }
         }
+        if(var3==null){
+        	return "nil";
+        }
         return var3;
 	}
 	
@@ -119,7 +124,7 @@ public class RedisService {
     	ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring.xml");        
     	
 		RedisService redisService = (RedisService) context.getBean("redisService");
-		redisService.lpop("dd");
+		redisService.lpush("dd", "77");
 	}
 
 }
