@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.me.task.Analysis;
 import com.me.utils.BaseUtil;
@@ -14,6 +16,8 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 
+@Component
+@Scope("prototype")
 public class MapperCallBack<T> implements Callback {
 	private Save saveListener;
 	private Parse parseListener;
@@ -71,15 +75,18 @@ public class MapperCallBack<T> implements Callback {
 		//TODO
 		//解析html中的其他链接加入到链接队列中
 		HttpUrl url = response.request().url();
-		String s_url = url.scheme()+"://www."+url.host()+"/";
-		Log.D("d--->"+s_url);
-//		analysis.MainDomin = s_url;
-//		List<String> urls = analysis.GetUrls(body);
-//		baseUtil.AddUrls2Queue((String[]) urls.toArray());
+		Log.D("d--->"+url.toString());
+		//提取html里面的url时如果href时简写的话，就往前面拼接上域名头
+		analysis.MainDomin = "http://jandan.net";
+		List<String> urls = analysis.GetUrls(body);
 		
-		//解析和保存完毕后将爬取成功的url加入到已经爬取过的url列表里面
-		System.out.println(url.toString());
+		String[] s_urls = new String[urls.size()];
+		for(int i=0;i<urls.size();i++){
+			s_urls[i] = urls.get(i);
+		}
+		baseUtil.AddUrls2Queue(s_urls);
 		baseUtil.addUrl2AlreadyQueue(url.toString());
+		//解析和保存完毕后将爬取成功的url加入到已经爬取过的url列表里面
 		System.out.println("已处理"+count++ +"个URL");
 	}
 

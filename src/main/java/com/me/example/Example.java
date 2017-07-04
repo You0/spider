@@ -19,8 +19,7 @@ public class Example {
 		crawl.setStartUrls(new String[]{"http://jandan.net/2017/06/30/forgetful-brain.html"});
 		
 		//这里的范型bean是自己创建的，随意什么类型主要是方便你自己把html解析之后序列化成java对象，然后存入数据库用的
-		MapperCallBack<bean> callBack = new MapperCallBack<bean>();
-		
+		MapperCallBack<bean> callBack = SpiderUtil.getMapperCallBack();
 		//callback预留的接口，在这里自己编写解析数据的过程
 		callBack.setParseListener(new Parse<bean>() {
 			public bean parse(String body) {
@@ -30,7 +29,6 @@ public class Example {
 		
 		//callback预留的接口，在这里自己编写数据持久化的过程
 		callBack.setSaveListener(new Save<bean>() {
-
 			public void save(bean entity) {
 				
 			}

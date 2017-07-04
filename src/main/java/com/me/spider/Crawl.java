@@ -44,15 +44,6 @@ public class Crawl {
 		this.listener = listener;
 	}
 	
-//	public void setParseListener(MapperCallBack parseListener) {
-//		this.parseListener = parseListener;
-//	}
-	
-	
-//	public void setSaveListener(Save saveListener) {
-//		this.saveListener = saveListener;
-//	}
-	
 	
 	public boolean match(String str)
 	{
@@ -71,7 +62,7 @@ public class Crawl {
 	public void start()
 	{
 		
-		
+		//取出url然后交给okhttp处理,这个线程一直存活。
 		AnsyTask.runTask(new Runnable() {
 			
 			public void run() {
