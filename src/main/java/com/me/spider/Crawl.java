@@ -47,11 +47,12 @@ public class Crawl {
 	
 	public boolean match(String str)
 	{
-		if(pattern==null){
-		   pattern = Pattern.compile(regexUrl);
-		}
-		Matcher matcher = pattern.matcher(str);
-		return matcher.matches();
+//		if(pattern==null){
+//		   pattern = Pattern.compile(regexUrl);
+//		}
+//		Matcher matcher = pattern.matcher(str);
+//		return matcher.matches();
+		return true;
 	}
 	
 	
@@ -70,7 +71,7 @@ public class Crawl {
 					while(true){
 						//多线程并发管理交给okhttp去处理
 						String url = blockingQueue.take();
-						
+						Thread.sleep(5*1000);
 						httpTask.submit(url).enqueue(listener);
 						
 					}
