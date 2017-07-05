@@ -20,88 +20,68 @@ import com.me.utils.Log;
 public class Crawl {
 	@Autowired
 	private BaseUtil baseUtil;
-	
+
 	@Autowired
 	private HttpTask httpTask;
-	
+
 	private String regexUrl;
 	private Pattern pattern;
-	
+
 	private MapperCallBack listener;
-	//private Save saveListener;
-	
-	private BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(5);
-	
-	public void setStartUrls(String[] urls){
+	// private Save saveListener;
+
+
+	public void setStartUrls(String[] urls) {
 		baseUtil.SetStartUrls(urls);
 	}
-	
-	public void setMatchRegex(String reg){
+
+	public void setMatchRegex(String reg) {
 		this.regexUrl = reg;
 	}
-	
+
 	public void setListener(MapperCallBack listener) {
 		this.listener = listener;
 	}
-	
-	
-	public boolean match(String str)
-	{
-		if(pattern==null){
-		   pattern = Pattern.compile(regexUrl);
+
+	public boolean match(String str) {
+		if (pattern == null) {
+			pattern = Pattern.compile(regexUrl);
 		}
 		Matcher matcher = pattern.matcher(str);
 		return matcher.matches();
 	}
-	
-	
+
 	/**
 	 * 开始执行任务
 	 * 
-	 * */
-	public void start()
-	{
-		
-		//取出url然后交给okhttp处理,这个线程一直存活。
-//		AnsyTask.runTask(new Runnable() {
-//			
-//			public void run() {
-//				try {
-//					while(true){
-//						//多线程并发管理交给okhttp去处理
-//						String url = blockingQueue.take();
-//						//Thread.sleep(5*1000);
-//						httpTask.submit(url).enqueue(listener);
-//						
-//					}
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				
-//			}
-//		});
-		
-		
-		
-		//每次重新启动的时候将爬取过得url重新加入回去
+	 */
+	public void start() {
+		// 每次重新启动的时候将爬取过得url重新加入回去
 		baseUtil.LoadAlready2RAM("already");
-		while(true){
-			String url;
-			if(!(url=baseUtil.getUrlFromQueue()).equals("nil")){
-				if(match(url)) {
-					try {
-						if(baseUtil.getAl_urls().contains(url)){
-							//System.out.println("重复，跳过。");
-							continue;
+
+		// 取出url然后交给okhttp处理,这个线程一直存活。
+		AnsyTask.runTask(new Runnable() {
+
+			public void run() {
+				try {
+					while (true) {
+						String url;
+						if (!(url = baseUtil.getUrlFromQueue()).equals("nil")) {
+							if (match(url)) {
+								if (baseUtil.getAl_urls().contains(url)) {
+									// System.out.println("重复，跳过。");
+									continue;
+								}
+								httpTask.submit(url).enqueue(listener);
+							}
 						}
-						//blockingQueue.put(url);
-						httpTask.submit(url).enqueue(listener);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+
 			}
-		}
+		});
+
 	}
 }
