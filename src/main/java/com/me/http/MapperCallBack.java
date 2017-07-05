@@ -77,12 +77,14 @@ public class MapperCallBack<T> implements Callback {
 		HttpUrl url = response.request().url();
 		Log.D(url.toString());
 		//提取html里面的url时如果href时简写的话，就往前面拼接上域名头
-		analysis.MainDomin = "http://jandan.net";
+		//System.out.println(url.scheme()+"://"+url.host());
+		analysis.MainDomin = url.scheme()+"://"+url.host();
 		List<String> urls = analysis.GetUrls(body);
 		
 		String[] s_urls = new String[urls.size()];
 		for(int i=0;i<urls.size();i++){
 			s_urls[i] = urls.get(i);
+			//System.out.println(s_urls[i]);
 		}
 		if(s_urls!=null && s_urls.length>0){
 			baseUtil.AddUrls2Queue(s_urls);

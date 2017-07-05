@@ -17,13 +17,14 @@ public class Example {
 		crawl.setMatchRegex("http://jandan.net/.*");
 		
 		//这里传入起始url，将这些url当做起始点，BFS广度搜索进行发散爬取
-		crawl.setStartUrls(new String[]{"http://jandan.net/2017/06/30/forgetful-brain.html"});
+		crawl.setStartUrls(new String[]{"http://jandan.net/2017/06/25/official-emoji.html"});
 		
 		//这里的范型bean是自己创建的，随意什么类型主要是方便你自己把html解析之后序列化成java对象，然后存入数据库用的
 		MapperCallBack<bean> callBack = SpiderUtil.getMapperCallBack();
 		//callback预留的接口，在这里自己编写解析数据的过程
 		callBack.setParseListener(new Parse<bean>() {
 			public bean parse(String body) {
+				//Log.D(body);
 				return null;
 			}
 		});
