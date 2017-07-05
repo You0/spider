@@ -42,12 +42,12 @@ public class MapperCallBack<T> implements Callback {
 	 * 使用范型，这里直接传入自己定义好的一个bean，然后把bean存入自己想存入的地方就行了
 	 * */
 	public interface Save<T>{
-		public void save(T entity );
+		public void save(String url,T entity );
 	}
 	
 	
 	public interface Parse<T>{
-		public T parse(String body);
+		public T parse(String url,String body);
 	}
 	
 	
@@ -64,18 +64,19 @@ public class MapperCallBack<T> implements Callback {
 		}
 		
 		
+		HttpUrl url = response.request().url();
+		Log.D(url.toString());
 		
 		String body = response.body().string();
 		//Log.D(body);
 		//交由2个注册的类进行解析和保存操作
-		T entity = (T) parseListener.parse(body);
-		saveListener.save(entity);
+		T entity = (T) parseListener.parse(url.toString(),body);
+		saveListener.save(url.toString(),entity);
 		
 		
 		//TODO
 		//解析html中的其他链接加入到链接队列中
-		HttpUrl url = response.request().url();
-		Log.D(url.toString());
+		
 		//提取html里面的url时如果href时简写的话，就往前面拼接上域名头
 		//System.out.println(url.scheme()+"://"+url.host());
 		analysis.MainDomin = url.scheme()+"://"+url.host();

@@ -23,15 +23,16 @@ public class Example {
 		MapperCallBack<bean> callBack = SpiderUtil.getMapperCallBack();
 		//callback预留的接口，在这里自己编写解析数据的过程
 		callBack.setParseListener(new Parse<bean>() {
-			public bean parse(String body) {
-				//Log.D(body);
+			public bean parse(String url, String body) {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		});
 		
 		//callback预留的接口，在这里自己编写数据持久化的过程
 		callBack.setSaveListener(new Save<bean>() {
-			public void save(bean entity) {
+			public void save(String url, bean entity) {
+				// TODO Auto-generated method stub
 				
 			}
 		});
