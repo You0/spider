@@ -43,4 +43,11 @@ public class BaseUtil {
 			al_urls.add(ls.get(i));
 		}
 	}
+
+	public Set<String> getAl_urls() {
+		return al_urls;
+	}
+	
+	
+
 }

@@ -30,7 +30,7 @@ public class Crawl {
 	private MapperCallBack listener;
 	//private Save saveListener;
 	
-	private BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(1000);
+	private BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<String>(5);
 	
 	public void setStartUrls(String[] urls){
 		baseUtil.SetStartUrls(urls);
@@ -64,23 +64,23 @@ public class Crawl {
 	{
 		
 		//取出url然后交给okhttp处理,这个线程一直存活。
-		AnsyTask.runTask(new Runnable() {
-			
-			public void run() {
-				try {
-					while(true){
-						//多线程并发管理交给okhttp去处理
-						String url = blockingQueue.take();
-						Thread.sleep(5*1000);
-						httpTask.submit(url).enqueue(listener);
-						
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		});
+//		AnsyTask.runTask(new Runnable() {
+//			
+//			public void run() {
+//				try {
+//					while(true){
+//						//多线程并发管理交给okhttp去处理
+//						String url = blockingQueue.take();
+//						//Thread.sleep(5*1000);
+//						httpTask.submit(url).enqueue(listener);
+//						
+//					}
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		
 		
 		
@@ -91,8 +91,13 @@ public class Crawl {
 			if(!(url=baseUtil.getUrlFromQueue()).equals("nil")){
 				if(match(url)) {
 					try {
-						blockingQueue.put(url);
-					} catch (InterruptedException e) {
+						if(baseUtil.getAl_urls().contains(url)){
+							//System.out.println("重复，跳过。");
+							continue;
+						}
+						//blockingQueue.put(url);
+						httpTask.submit(url).enqueue(listener);
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

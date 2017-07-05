@@ -22,7 +22,7 @@ public class MapperCallBack<T> implements Callback {
 	private Save saveListener;
 	private Parse parseListener;
 	
-	private int count = 0;
+	private static int count = 0;
 	
 	@Autowired
 	private BaseUtil baseUtil;
@@ -84,7 +84,9 @@ public class MapperCallBack<T> implements Callback {
 		for(int i=0;i<urls.size();i++){
 			s_urls[i] = urls.get(i);
 		}
-		baseUtil.AddUrls2Queue(s_urls);
+		if(s_urls!=null && s_urls.length>0){
+			baseUtil.AddUrls2Queue(s_urls);
+		}
 		baseUtil.addUrl2AlreadyQueue(url.toString());
 		//解析和保存完毕后将爬取成功的url加入到已经爬取过的url列表里面
 		System.out.println("已处理"+count++ +"个URL");

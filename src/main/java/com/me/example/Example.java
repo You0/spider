@@ -4,6 +4,7 @@ import com.me.http.MapperCallBack;
 import com.me.http.MapperCallBack.Parse;
 import com.me.http.MapperCallBack.Save;
 import com.me.spider.Crawl;
+import com.me.utils.Log;
 import com.me.utils.SpiderUtil;
 
 public class Example {
