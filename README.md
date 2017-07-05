@@ -7,8 +7,8 @@ Redis保存爬取进度和已经爬取过得链接,需要安装redis，IP为127.
 多线程与访问网络方面直接交由OKHTTP处理，省时省力，不过自己同时也在仿写okhttp，以后说不定会替换成自己写的TinyHttp。
 
 
-上传了jar包，直接下载jar即可使用。
-
+打成了jar包，方便直接使用，路径：target/spider-0.0.1-SNAPSHOT.jar
+可直接下载这个jar进行使用
 
 //使用案例
 		
