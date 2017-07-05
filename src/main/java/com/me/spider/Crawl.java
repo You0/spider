@@ -47,12 +47,11 @@ public class Crawl {
 	
 	public boolean match(String str)
 	{
-//		if(pattern==null){
-//		   pattern = Pattern.compile(regexUrl);
-//		}
-//		Matcher matcher = pattern.matcher(str);
-//		return matcher.matches();
-		return true;
+		if(pattern==null){
+		   pattern = Pattern.compile(regexUrl);
+		}
+		Matcher matcher = pattern.matcher(str);
+		return matcher.matches();
 	}
 	
 	

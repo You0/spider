@@ -75,7 +75,7 @@ public class MapperCallBack<T> implements Callback {
 		//TODO
 		//解析html中的其他链接加入到链接队列中
 		HttpUrl url = response.request().url();
-		Log.D("d--->"+url.toString());
+		Log.D(url.toString());
 		//提取html里面的url时如果href时简写的话，就往前面拼接上域名头
 		analysis.MainDomin = "http://jandan.net";
 		List<String> urls = analysis.GetUrls(body);
