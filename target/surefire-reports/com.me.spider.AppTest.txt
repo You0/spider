@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.me.spider.AppTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.786 sec <<< FAILURE!
+testApp(com.me.spider.AppTest)  Time elapsed: 0.771 sec  <<< ERROR!
+java.lang.NullPointerException
+	at com.me.spider.AppTest.testApp(AppTest.java:46)
+
