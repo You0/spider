@@ -63,9 +63,16 @@ public class MapperCallBack<T> implements Callback {
 			throw new IOException("监听器为初始化");
 		}
 		
-		
 		HttpUrl url = response.request().url();
 		Log.D(url.toString());
+		
+		//如果返回码不等于200也就是返回的结果不正确，说明网站此时不可用或者该链接不可用则把url加入到失败队列
+		if(response.code()!=200){
+			baseUtil.AddFailUrl2Queue(url.toString());
+			return;
+		}
+		
+		
 		
 		String body = response.body().string();
 		//Log.D(body);

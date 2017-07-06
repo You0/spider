@@ -24,6 +24,12 @@ public class BaseUtil {
 		return redisService.rpush("url", urls);
 	}
 	
+	
+	public boolean AddFailUrl2Queue(String url){
+		return redisService.rpush("fail", url);
+	}
+	
+	
 	public String getUrlFromQueue(){
 		return redisService.lpop("url");
 	}
