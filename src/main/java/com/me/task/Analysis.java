@@ -55,9 +55,9 @@ public class Analysis {
 	}
 
 	// 解析HTML中的image URL
-	public List<String> ImageDate(String html) {
+	public static List<String> ImageDate(String html) {
 		LinkedList<String> linkedList = new LinkedList<String>();
-		String regx = "http://.*?\\.(jpg|jpeg|png)";
+		String regx = "http.*?://.*?\\.(jpg|jpeg|png)";
 		Pattern pattern = Pattern.compile(regx);
 		Matcher matcher = pattern.matcher(html);
 		while (matcher.find()) {
