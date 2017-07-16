@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.me.spider.Crawl;
 import com.me.task.Analysis;
 import com.me.utils.BaseUtil;
 import com.me.utils.Log;
@@ -54,10 +55,15 @@ public class MapperCallBack<T> implements Callback {
 	
 	public void onFailure(Call call, IOException e) {
 		// TODO Auto-generated method stub
+		System.out.println("Failure");
+		Crawl.semaphore.release();
+		baseUtil.AddFailUrl2Queue(call.request().url().toString());
 		
 	}
 
 	public void onResponse(Call call, Response response) throws IOException {
+		Crawl.semaphore.release();
+		
 		
 		if(parseListener==null || saveListener== null){
 			throw new IOException("监听器为初始化");
@@ -68,7 +74,9 @@ public class MapperCallBack<T> implements Callback {
 		
 		//如果返回码不等于200也就是返回的结果不正确，说明网站此时不可用或者该链接不可用则把url加入到失败队列
 		if(response.code()!=200){
+			System.out.println("code Error");
 			baseUtil.AddFailUrl2Queue(url.toString());
+			baseUtil.addUrl2AlreadyQueue(url.toString());
 			return;
 		}
 		
@@ -81,25 +89,23 @@ public class MapperCallBack<T> implements Callback {
 		saveListener.save(url.toString(),entity);
 		
 		
-		//TODO
-		//解析html中的其他链接加入到链接队列中
 		
 		//提取html里面的url时如果href时简写的话，就往前面拼接上域名头
-		//System.out.println(url.scheme()+"://"+url.host());
 		analysis.MainDomin = url.scheme()+"://"+url.host();
 		List<String> urls = analysis.GetUrls(body);
 		
-		String[] s_urls = new String[urls.size()];
-		for(int i=0;i<urls.size();i++){
-			s_urls[i] = urls.get(i);
-			//System.out.println(s_urls[i]);
-		}
-		if(s_urls!=null && s_urls.length>0){
-			baseUtil.AddUrls2Queue(s_urls);
-		}
-		baseUtil.addUrl2AlreadyQueue(url.toString());
+//		String[] s_urls = new String[urls.size()];
+//		for(int i=0;i<urls.size();i++){
+//			s_urls[i] = urls.get(i);
+//			//System.out.println(s_urls[i]);
+//		}
+//		if(s_urls!=null && s_urls.length>0){
+//			baseUtil.AddUrls2Queue(s_urls);
+//		}
+		//baseUtil.addUrl2AlreadyQueue(url.toString());
 		//解析和保存完毕后将爬取成功的url加入到已经爬取过的url列表里面
 		System.out.println("已处理"+count++ +"个URL");
+		
 	}
 
 

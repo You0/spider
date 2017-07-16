@@ -24,12 +24,14 @@ import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 public class Example {
+	static long count = 0;
+	 static Connection conn;
 	public static void main(String[] args) throws Exception {
 		// 使用案例
 
-		String uri = "jdbc:mysql://localhost:3306/new_jav";
+		final String uri = "jdbc:mysql://localhost:3306/new_jav";
 		Class.forName("com.mysql.jdbc.Driver");
-		final Connection conn = (Connection) DriverManager.getConnection(uri, "root", "9562");
+		conn = (Connection) DriverManager.getConnection(uri, "root", "9562");
 
 		Crawl crawl = SpiderUtil.Steup();
 
@@ -49,12 +51,13 @@ public class Example {
 		// callback预留的接口，在这里自己编写解析数据的过程
 		callBack.setParseListener(new Parse<Movie>() {
 			public Movie parse(String url, String body) {
-
+				System.out.println(url);
 				Movie movie = null;
 
 				Document document = Jsoup.parse(body);
 				Elements els = document.getElementsByClass("item");
 				if (url.contains("-")) {
+					System.out.println("count"+count++ );
 					movie = new Movie();
 					LinkedList<String> images;
 					images = (LinkedList<String>) Analysis.ImageDate(body);
@@ -114,9 +117,13 @@ public class Example {
 						} else if (str.contains("導演")) {
 							movie.setDirector(str.split(":")[1].substring(1));
 						} else if (str.contains("製作商")) {
-							movie.setCompany(str.split(":")[1].substring(1));
+							String[] strings = str.split(":");
+							if(strings.length>1)
+							movie.setCompany(strings[1]);
 						} else if (str.contains("系列")) {
-							movie.setSeries(str.split(":")[1].substring(1));
+							String[] strings = str.split(":");
+							if(strings.length>1)
+							movie.setCompany(strings[1]);
 						} else if (str.contains("類別")) {
 							i = 1;
 						} else if (i == 1) {
@@ -139,7 +146,9 @@ public class Example {
 						movie.setTitle(ctitle.text());
 					}
 					//System.out.println(movie.toString());
+					
 				}
+				
 				return movie;
 			}
 		});
@@ -171,9 +180,19 @@ public class Example {
 
 					//System.out.println(ps.toString());
 					ps.execute();
+					
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
+					try {
+						if(conn.isClosed()){
+							conn = (Connection) DriverManager.getConnection(uri, "root", "9562");
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 
 			}

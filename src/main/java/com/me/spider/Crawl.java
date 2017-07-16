@@ -3,6 +3,7 @@ package com.me.spider;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,8 @@ import com.me.http.MapperCallBack;
 import com.me.task.AnsyTask;
 import com.me.utils.BaseUtil;
 import com.me.utils.Log;
+
+import okhttp3.Call;
 
 @Controller("crawl")
 public class Crawl {
@@ -35,6 +38,7 @@ public class Crawl {
 	
 	private MapperCallBack listener;
 	
+	public static Semaphore semaphore = new Semaphore(100);
 	
 	private String proxyUrl = null;
 	private int proxyPort;
@@ -95,6 +99,8 @@ public class Crawl {
 	public void start() {
 		// 每次重新启动的时候将爬取过得url重新加入回去
 		baseUtil.LoadAlready2RAM("already");
+		//baseUtil.LoadFail2Url();
+		
 		if(proxyUrl!=null){
 			httpTask.setProxy(proxyUrl, proxyPort);
 		}
@@ -108,12 +114,21 @@ public class Crawl {
 						
 						if (!(url = baseUtil.getUrlFromQueue()).equals("nil")) {
 							if (match(url) && !BlackMatch(url)) {
-								if (baseUtil.getAl_urls().contains(url)) {
-									// System.out.println("重复，跳过。");
+//								if (baseUtil.getAl_urls().contains(url)) {
+//									//System.out.println("重复，跳过。");
+//									continue;
+//								}
+								//System.out.println(url);
+								semaphore.acquire();
+								if(!url.contains("-")){
+									System.out.println("非影片信息跳过");
+									Crawl.semaphore.release();
 									continue;
 								}
-								//System.out.println(url);
-								httpTask.submit(url).enqueue(listener);
+								Call call = httpTask.submit(url);
+								call.enqueue(listener);
+								
+								//call.cancel();
 							}
 							//System.out.println(url);
 						}

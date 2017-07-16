@@ -2,6 +2,7 @@ package com.me.http;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
 
@@ -22,13 +23,21 @@ public class HttpTask {
 			}else{
 				builder = new OkHttpClient.Builder();
 			}
-			  client = builder.build();
+			
+			//builder.readTimeout(10, TimeUnit.SECONDS).connectTimeout(10,TimeUnit.SECONDS);
+			
+			 client = builder.build();
+			 client.newBuilder().connectTimeout(10, TimeUnit.SECONDS);
+			 client.newBuilder().readTimeout(10,TimeUnit.SECONDS);
+			 client.newBuilder().writeTimeout(10,TimeUnit.SECONDS);
 		}
 		
 		Request request = new Request.Builder().url(url)
 				.build();
 		
-		return client.newCall(request);
+		
+		Call call = client.newCall(request);
+		return call;
 	}
 	
 	public boolean setProxy(String addr,int port){
