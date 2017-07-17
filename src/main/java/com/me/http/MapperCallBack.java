@@ -55,7 +55,7 @@ public class MapperCallBack<T> implements Callback {
 	
 	public void onFailure(Call call, IOException e) {
 		// TODO Auto-generated method stub
-		System.out.println("Failure");
+		System.out.println(call.request().url().toString() + "Failure");
 		Crawl.semaphore.release();
 		baseUtil.AddFailUrl2Queue(call.request().url().toString());
 		
@@ -94,17 +94,16 @@ public class MapperCallBack<T> implements Callback {
 		analysis.MainDomin = url.scheme()+"://"+url.host();
 		List<String> urls = analysis.GetUrls(body);
 		
-//		String[] s_urls = new String[urls.size()];
-//		for(int i=0;i<urls.size();i++){
-//			s_urls[i] = urls.get(i);
-//			//System.out.println(s_urls[i]);
-//		}
-//		if(s_urls!=null && s_urls.length>0){
-//			baseUtil.AddUrls2Queue(s_urls);
-//		}
-		//baseUtil.addUrl2AlreadyQueue(url.toString());
+		String[] s_urls = new String[urls.size()];
+		for(int i=0;i<urls.size();i++){
+			s_urls[i] = urls.get(i);
+		}
+		if(s_urls!=null && s_urls.length>0){
+			baseUtil.AddUrls2Queue(s_urls);
+		}
+		baseUtil.addUrl2AlreadyQueue(url.toString());
 		//解析和保存完毕后将爬取成功的url加入到已经爬取过的url列表里面
-		System.out.println("已处理"+count++ +"个URL");
+		System.out.println("已处理"+count++ +"个,url:"+url.toString());
 		
 	}
 

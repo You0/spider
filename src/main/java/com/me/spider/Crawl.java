@@ -99,8 +99,9 @@ public class Crawl {
 	public void start() {
 		// 每次重新启动的时候将爬取过得url重新加入回去
 		baseUtil.LoadAlready2RAM("already");
-		//baseUtil.LoadFail2Url();
-		
+		//将失败的url链接载入队列，并删除该队列
+		baseUtil.LoadFail2Url();
+		baseUtil.DeleteFail();
 		if(proxyUrl!=null){
 			httpTask.setProxy(proxyUrl, proxyPort);
 		}
@@ -114,17 +115,12 @@ public class Crawl {
 						
 						if (!(url = baseUtil.getUrlFromQueue()).equals("nil")) {
 							if (match(url) && !BlackMatch(url)) {
-//								if (baseUtil.getAl_urls().contains(url)) {
-//									//System.out.println("重复，跳过。");
-//									continue;
-//								}
-								//System.out.println(url);
-								semaphore.acquire();
-								if(!url.contains("-")){
-									System.out.println("非影片信息跳过");
-									Crawl.semaphore.release();
+								if (baseUtil.getAl_urls().contains(url)) {
+									//System.out.println("重复，跳过。");
 									continue;
 								}
+								//System.out.println(url);
+								semaphore.acquire();
 								Call call = httpTask.submit(url);
 								call.enqueue(listener);
 								

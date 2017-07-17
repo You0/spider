@@ -63,9 +63,7 @@ public class BaseUtil {
 		List<String> ls = redisService.lrange(key);
 		int i=0;
 		for(i=0;i<ls.size();i++){
-			//System.out.println(i+"条");
 			boolean result = al_urls.add(ls.get(i));
-			//System.out.println(result +""+ al_urls.size());
 		}
 		System.out.println("已加载爬取过的URL"+i+"条");
 		System.out.println("已加载爬取过的URL"+i+"条");
@@ -81,6 +79,15 @@ public class BaseUtil {
 			redisService.lpush("url", ls.get(i));
 		}
 	}
+	
+	
+	public void DeleteFail(){
+		redisService.delete("fail");
+	}
+	
+	
+	
+	
 
 	public List<String> getAl_urls() {
 		return al_urls;
