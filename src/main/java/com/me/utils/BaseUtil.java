@@ -16,7 +16,7 @@ public class BaseUtil {
 	@Autowired
 	public RedisService redisService;
 	
-	private List<String> al_urls = new LinkedList<String>();
+	private Set<String> al_urls = new HashSet<String>();
 	
 	public boolean SetStartUrls(String[] urls){
 		return redisService.rpush("url", urls);
@@ -89,7 +89,7 @@ public class BaseUtil {
 	
 	
 
-	public List<String> getAl_urls() {
+	public Set<String> getAl_urls() {
 		return al_urls;
 	}
 	
