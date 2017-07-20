@@ -80,6 +80,9 @@ public class Crawl {
 	
 	
 	public boolean BlackMatch(String str){
+		if(BlackReg==null){
+			return false;
+		}
 		for(int i=0;i<BlackReg.length;i++){
 			BlackPattern = Pattern.compile(BlackReg[i]);
 			Matcher matcher = BlackPattern.matcher(str);
