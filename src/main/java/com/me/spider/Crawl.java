@@ -1,6 +1,7 @@
 package com.me.spider;
 
 import java.security.KeyStore.PrivateKeyEntry;
+import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
@@ -38,11 +39,21 @@ public class Crawl {
 	
 	private MapperCallBack listener;
 	
+	private HashMap<String, String> headers;
+	
 	public static Semaphore semaphore = new Semaphore(100);
+	
+	
+	public int sleepTime = 0;
 	
 	private String proxyUrl = null;
 	private int proxyPort;
 	// private Save saveListener;
+	
+	
+	public void setHeaders(HashMap<String, String> headers) {
+		this.headers = headers;
+	}
 
 	public void setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
@@ -52,6 +63,9 @@ public class Crawl {
 		this.proxyUrl = proxyUrl;
 	}
 	
+	public void setSleepTime(int sleepTime) {
+		this.sleepTime = sleepTime;
+	}
 	
 	
 	public void setBlackReg(String[] blackReg) {
@@ -108,6 +122,11 @@ public class Crawl {
 		if(proxyUrl!=null){
 			httpTask.setProxy(proxyUrl, proxyPort);
 		}
+		
+		if(headers!=null){
+			httpTask.setHeaders(headers);
+		}
+		
 		// 取出url然后交给okhttp处理,这个线程一直存活。
 		AnsyTask.runTask(new Runnable() {
 
@@ -122,6 +141,13 @@ public class Crawl {
 									//System.out.println("重复，跳过。");
 									continue;
 								}
+								if(sleepTime!=0){
+									try{
+										Thread.sleep(sleepTime*1000);
+									}catch (Exception e) {
+									}
+								}
+								
 								//System.out.println(url);
 								semaphore.acquire();
 								Call call = httpTask.submit(url);

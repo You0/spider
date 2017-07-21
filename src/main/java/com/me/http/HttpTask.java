@@ -2,6 +2,8 @@ package com.me.http;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
@@ -14,6 +16,11 @@ import okhttp3.Request;
 public class HttpTask {
 	private OkHttpClient client;
 	private Proxy mProxy;
+	
+	private HashMap<String, String> header;
+	
+
+	
 	//提交url任务
 	public Call submit(String url){
 		OkHttpClient.Builder builder = null;
@@ -32,8 +39,16 @@ public class HttpTask {
 			 client.newBuilder().writeTimeout(10,TimeUnit.SECONDS);
 		}
 		
-		Request request = new Request.Builder().url(url)
-				.build();
+		Request.Builder builder2 = new Request.Builder();
+		
+		if(header!=null){
+			for(Entry<String, String> entry:header.entrySet()){
+				builder2.addHeader(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		Request request = builder2.url(url).build();
+		
 		
 		
 		Call call = client.newCall(request);
@@ -42,6 +57,11 @@ public class HttpTask {
 	
 	public boolean setProxy(String addr,int port){
 		Proxy proxyTest = new Proxy(Proxy.Type.HTTP,new InetSocketAddress(addr, port));
+		return true;
+	}
+	
+	public boolean setHeaders(HashMap<String, String> header){
+		this.header = header;
 		return true;
 	}
 	
